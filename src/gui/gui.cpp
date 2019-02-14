@@ -586,14 +586,14 @@ void ShowMenu(MENU *menu)
 		int fg_color;
 
 		if(menu->itemCur == i) fg_color = COLOR_ACTIVE_ITEM; else fg_color = COLOR_INACTIVE_ITEM;
-		ShowMenuItem(80, (18 + i) * 8, mi, fg_color);
+		ShowMenuItem(80, (18 + i) * 12, mi, fg_color);
 	}
 
 	// show preview screen
 	ShowPreview(menu);
 
 	// print info string
-	print_string("Press B to return to game", COLOR_HELP_TEXT, COLOR_BG, 56, 220);
+	// print_string("Press B to return to game", COLOR_HELP_TEXT, COLOR_BG, 56, 220);
 	print_string("Handy320 v0.1 for OpenDingux", COLOR_HELP_TEXT, COLOR_BG, 44, 2);
 	print_string("Handy/SDL 0.5 (c) K. Wilkins and SDLemu", COLOR_HELP_TEXT, COLOR_BG, 4, 12);
 }
