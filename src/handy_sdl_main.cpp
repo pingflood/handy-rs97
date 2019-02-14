@@ -672,10 +672,22 @@ int main(int argc, char *argv[])
 				originalshow++;
 				if (originalshow == 1) lynxversion = 1;
 				else lynxversion = 2;
-				mainSurface=SDL_SetVideoMode(320,240,16,SDL_HWSURFACE|SDL_DOUBLEBUF);
+				mainSurface=SDL_SetVideoMode(320,240,16,SDL_HWSURFACE|
+                #ifdef SDL_TRIPLEBUF
+                    SDL_TRIPLEBUF
+                #else
+                    SDL_DOUBLEBUF
+                #endif
+                );
 			} else {
 				originalshow=0;
-				mainSurface=SDL_SetVideoMode(160,102,16,SDL_HWSURFACE|SDL_DOUBLEBUF);
+				mainSurface=SDL_SetVideoMode(160,102,16,SDL_HWSURFACE|
+                #ifdef SDL_TRIPLEBUF
+                    SDL_TRIPLEBUF
+                #else
+                    SDL_DOUBLEBUF
+                #endif
+                );
 			}
 
 		    #else
@@ -691,10 +703,25 @@ int main(int argc, char *argv[])
 #ifdef GCWZERO
                     if(handy_sdl_event.key.keysym.sym == SDLK_END || handy_sdl_event.key.keysym.sym == SDLK_ESCAPE ) {
         			redrawbackground=5;
-                    mainSurface = SDL_SetVideoMode(SCREEN_WIDTH,SCREEN_HEIGHT,16,SDL_HWSURFACE|SDL_DOUBLEBUF);
-                        gui_Run();
 
-        			if (!originalshow) mainSurface = SDL_SetVideoMode(LYNX_WIDTH,LYNX_HEIGHT,16,SDL_HWSURFACE|SDL_DOUBLEBUF);
+                    Uint32             videoflags;
+
+                    mainSurface = SDL_SetVideoMode(SCREEN_WIDTH,SCREEN_HEIGHT,16,SDL_HWSURFACE|
+                        #ifdef SDL_TRIPLEBUF
+                            SDL_TRIPLEBUF
+                        #else
+                            SDL_DOUBLEBUF
+                        #endif
+                    );
+                    gui_Run();
+
+        			if (!originalshow) mainSurface = SDL_SetVideoMode(LYNX_WIDTH,LYNX_HEIGHT,16,SDL_HWSURFACE|
+                        #ifdef SDL_TRIPLEBUF
+                            SDL_TRIPLEBUF
+                        #else
+                            SDL_DOUBLEBUF
+                        #endif
+                    );
 #else
                     if(handy_sdl_event.key.keysym.sym == SDLK_TAB) {
                         gui_Run();

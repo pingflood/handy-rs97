@@ -112,9 +112,21 @@ int handy_sdl_video_early_setup(int surfacewidth, int surfaceheight, int sdl_bpp
     surfaceheight = 240;
 #endif
 if (originalshow)
-    mainSurface  = SDL_SetVideoMode(320, 240, sdl_bpp_flag, videoflags);
+    mainSurface  = SDL_SetVideoMode(320, 240, sdl_bpp_flag, SDL_HWSURFACE|
+    #ifdef SDL_TRIPLEBUF
+        SDL_TRIPLEBUF
+    #else
+        SDL_DOUBLEBUF
+    #endif
+    );
 else
-    mainSurface  = SDL_SetVideoMode(surfacewidth, surfaceheight, sdl_bpp_flag, videoflags);
+    mainSurface  = SDL_SetVideoMode(surfacewidth, surfaceheight, sdl_bpp_flag, SDL_HWSURFACE|
+    #ifdef SDL_TRIPLEBUF
+        SDL_TRIPLEBUF
+    #else
+        SDL_DOUBLEBUF
+    #endif
+    );
 
     if (mainSurface == NULL)
     {
@@ -1038,7 +1050,13 @@ void    handy_sdl_video_close(void)
 #ifdef GCWZERO
 void gcw_display_bios_warning(void)
 {
-    mainSurface  = SDL_SetVideoMode(320, 240, 16, SDL_HWSURFACE | SDL_DOUBLEBUF);
+    mainSurface  = SDL_SetVideoMode(320, 240, 16, SDL_HWSURFACE|
+    #ifdef SDL_TRIPLEBUF
+        SDL_TRIPLEBUF
+    #else
+        SDL_DOUBLEBUF
+    #endif
+    );
     TTF_Init();
     TTF_Font *ttffont = NULL;
     SDL_Color text_color = {255, 0, 0};

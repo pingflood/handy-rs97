@@ -150,7 +150,7 @@ int handy_sdl_audio_init(void)
     desired->format     = AUDIO_U8;                  // Unsigned 8-bit
     desired->channels   = 2;                         // Pseudo stereo
     desired->freq       = HANDY_AUDIO_SAMPLE_FREQ;   // Freq : 22050 
-    desired->samples    = 256;                       // Samples (power of two)
+    desired->samples    = 2048;                       // Samples (power of two)
     desired->callback   = handy_sdl_audio_callback;  // Our audio callback
     desired->userdata   = NULL;                      // N/A
 

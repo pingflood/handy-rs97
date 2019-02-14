@@ -52,13 +52,13 @@ OBJS = \
 		obj/font.o
 		# obj/unzip.o \
 
-all: obj $(TARGET)$(EXESUFFIX)
+all: obj handy320/$(TARGET)$(EXESUFFIX)
 	@echo "*** Looks like it compiled OK... Give it a whirl!"
 
 clean:
 	@echo -n "*** Cleaning out the garbage..."
 	@rm -rf obj
-	@rm -f ./$(TARGET)$(EXESUFFIX) $(TARGET).opk $(TARGET).ipk
+	@rm -f handy320/$(TARGET)$(EXESUFFIX) handy320/$(TARGET).opk handy320/$(TARGET).ipk
 	@echo done!
 
 obj:
@@ -92,14 +92,14 @@ obj/%.o: src/zlib-113/%.c
 	@echo "*** Compiling $<..."
 	$(CC) $(CFLAGS) $(INCS) -c $< -o $@
 	
-$(TARGET)$(EXESUFFIX): $(OBJS)
+handy320/$(TARGET)$(EXESUFFIX): $(OBJS)
 	@echo "*** Linking it all together..."
 	$(LD) $(LDFLAGS) -o $@ $(OBJS) $(LIBS)
-	$(STRIP) --strip-all $(TARGET)$(EXESUFFIX)
+	$(STRIP) --strip-all handy320/$(TARGET)$(EXESUFFIX)
 
-ipk: $(TARGET)
+ipk: handy320/$(TARGET)$(EXESUFFIX)
 	@rm -rf /tmp/.handy320-ipk/ && mkdir -p /tmp/.handy320-ipk/root/home/retrofw/emus/handy320 /tmp/.handy320-ipk/root/home/retrofw/apps/gmenu2x/sections/emulators /tmp/.handy320-ipk/root/home/retrofw/apps/gmenu2x/sections/systems
-	@cp handy320/background_lynx.png handy320/background_lynx2.png handy320/conffiles handy320/control handy320/handy320.lnk handy320/handy320.png handy320/lynx.handy320.lnk handy320/ProggyTiny.ttf /tmp/.handy320-ipk/root/home/retrofw/emus/handy320
+	@cp handy320/handy320.dge handy320/background_lynx.png handy320/background_lynx2.png handy320/conffiles handy320/control handy320/handy320.lnk handy320/handy320.png handy320/lynx.handy320.lnk handy320/ProggyTiny.ttf /tmp/.handy320-ipk/root/home/retrofw/emus/handy320
 	@cp handy320/handy320.lnk /tmp/.handy320-ipk/root/home/retrofw/apps/gmenu2x/sections/emulators
 	@cp handy320/lynx.handy320.lnk /tmp/.handy320-ipk/root/home/retrofw/apps/gmenu2x/sections/systems
 	@sed "s/^Version:.*/Version: $$(date +%Y%m%d)/" handy320/control > /tmp/.handy320-ipk/control

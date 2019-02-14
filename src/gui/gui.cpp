@@ -95,7 +95,7 @@ typedef struct {
 	MENUITEM *m; // array of items
 } MENU;
 
-char* gui_ScaleNames[] = {"original", "fullscreen", "simple2x"};
+char* gui_ScaleNames[] = {"original", "fullscreen"};
 char* gui_YesNo[] = {"no", "yes"};
 
 MENUITEM gui_MainMenuItems[] = {
@@ -110,10 +110,10 @@ MENUITEM gui_MainMenuItems[] = {
 MENU gui_MainMenu = { 5, 0, (MENUITEM *)&gui_MainMenuItems };
 
 MENUITEM gui_ConfigMenuItems[] = {
-	{(char *)"Upscale  : ", &gui_ImageScaling, 2, (char **)&gui_ScaleNames, NULL},
+	{(char *)"Scaling  : ", &gui_ImageScaling, 1, (char **)&gui_ScaleNames, NULL},
 	//{(char *)"Frameskip: ", &gui_Frameskip, 9, NULL, NULL},
-	{(char *)"Show fps : ", &gui_Show_FPS, 1, (char **)&gui_YesNo, NULL},
-	{(char *)"Limit fps: ", &Throttle, 1, (char **)&gui_YesNo, NULL},
+	{(char *)"Show FPS : ", &gui_Show_FPS, 1, (char **)&gui_YesNo, NULL},
+	{(char *)"Limit FPS: ", &Throttle, 1, (char **)&gui_YesNo, NULL},
 	{(char *)"Swap A/B : ", &gui_SwapAB, 1, (char **)&gui_YesNo, NULL}
 };
 
@@ -765,7 +765,13 @@ void gui_video_early_init()
 {
 	SDL_Init(SDL_INIT_AUDIO|SDL_INIT_VIDEO);
 	// handy_sdl_video_early_setup(480, 272, 16, SDL_HWSURFACE | SDL_DOUBLEBUF);
-	handy_sdl_video_early_setup(320, 240, 16, SDL_HWSURFACE | SDL_DOUBLEBUF);
+	handy_sdl_video_early_setup(320, 240, 16, SDL_HWSURFACE |
+    #ifdef SDL_TRIPLEBUF
+        SDL_TRIPLEBUF
+    #else
+        SDL_DOUBLEBUF
+    #endif
+    );
 	menuSurface = SDL_CreateRGBSurface(SDL_SWSURFACE, 320, 240, 16, 0, 0, 0, 0);
 	SDL_ShowCursor(0);
 	SDL_EnableKeyRepeat(/*SDL_DEFAULT_REPEAT_DELAY*/ 150, /*SDL_DEFAULT_REPEAT_INTERVAL*/30);
