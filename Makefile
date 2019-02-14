@@ -58,7 +58,7 @@ all: obj $(TARGET)$(EXESUFFIX)
 clean:
 	@echo -n "*** Cleaning out the garbage..."
 	@rm -rf obj
-	@rm -f ./$(TARGET)$(EXESUFFIX)
+	@rm -f ./$(TARGET)$(EXESUFFIX) $(TARGET).opk $(TARGET).ipk
 	@echo done!
 
 obj:
