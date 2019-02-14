@@ -23,7 +23,7 @@
 
 int             systemRedShift    = 0;
 int             systemBlueShift   = 0;
-int 			systemGreenShift  = 0;
+int       systemGreenShift  = 0;
 
 int sdlCalculateShift(u32 mask)
 {
@@ -1742,8 +1742,8 @@ void Simple2x(u8 *srcPtr, u32 srcPitch, u8 * /* deltaPtr */,
     } while ((u8 *) bP < finish);
     
     srcPtr += srcPitch;
-    dstPtr += dstPitch * 2 * 2; // fix for retrogame
-    nextLine += dstPitch * 2 * 2; // fix for retrogame
+    dstPtr += dstPitch * 2;
+    nextLine += dstPitch * 2;
   }
   while (--height);
 }
@@ -2179,51 +2179,51 @@ void bilinearPlus32(u8 *srcPtr, u32 srcPitch, u8 * /* deltaPtr */,
 
 inline unsigned short average(unsigned short a, unsigned short b)
 {
-	return (unsigned short)(((a ^ b) & 0xf7deU) >> 1) + (a & b);
-	/* http://www.compuphase.com/menu.htm */
+  return (unsigned short)(((a ^ b) & 0xf7deU) >> 1) + (a & b);
+  /* http://www.compuphase.com/menu.htm */
 }
 
 void Average(u8 *srcPtr, u32 srcPitch, u8 * /* deltaPtr */, u8 *dstPtr, u32 dstPitch, int width, int height)
 {
-	u16 *ssrc = (u16 *)srcPtr;
-	u16 *ddst = (u16 *)dstPtr;
-	int srowbytes = srcPitch >> 1, drowbytes = dstPitch >> 1;
-	int x, y;
-	
-	for(y = 0; y < height; y++) {
-		uint16 *s = (uint16 *)ssrc;
-		uint16 *s1 = (uint16 *)ssrc + srowbytes;
-		uint16 *d = (uint16 *)ddst;
-		uint16 *d1 = (uint16 *)ddst + drowbytes;
-		
-		for(x = 0; x < width; x++) {
-			uint16 pixelA = *(s);
-        	uint16 pixelC = *(s + 1);
-        	d[0] = pixelA;
-        	d[1] = average(pixelA, pixelC);
-        	s += 1;
-        	d += 2;
+  u16 *ssrc = (u16 *)srcPtr;
+  u16 *ddst = (u16 *)dstPtr;
+  int srowbytes = srcPitch >> 1, drowbytes = dstPitch >> 1;
+  int x, y;
+  
+  for(y = 0; y < height; y++) {
+    uint16 *s = (uint16 *)ssrc;
+    uint16 *s1 = (uint16 *)ssrc + srowbytes;
+    uint16 *d = (uint16 *)ddst;
+    uint16 *d1 = (uint16 *)ddst + drowbytes;
+    
+    for(x = 0; x < width; x++) {
+      uint16 pixelA = *(s);
+          uint16 pixelC = *(s + 1);
+          d[0] = pixelA;
+          d[1] = average(pixelA, pixelC);
+          s += 1;
+          d += 2;
         }
         s -= srowbytes;
         
         for(x = 0; x < width; x++) {
-			uint16 pixelA = *(s);
-			uint16 pixelC = *(s + 1);
-			uint16 pixelI = *(s1);
-			uint16 pixelJ = *(s1 + 1);
-			
-			uint16 pixelB = average(pixelA, pixelC);
-			
-			d1[0] = average(pixelA, pixelI); // E
-        	uint16 p1 = average(pixelI, pixelJ);
-        	d1[1] = average(pixelB, p1);
-			
-			s += 1;
-        	s1 += 1;
-        	d1 += 2;
-		}
+      uint16 pixelA = *(s);
+      uint16 pixelC = *(s + 1);
+      uint16 pixelI = *(s1);
+      uint16 pixelJ = *(s1 + 1);
+      
+      uint16 pixelB = average(pixelA, pixelC);
+      
+      d1[0] = average(pixelA, pixelI); // E
+          uint16 p1 = average(pixelI, pixelJ);
+          d1[1] = average(pixelB, p1);
+      
+      s += 1;
+          s1 += 1;
+          d1 += 2;
+    }
         ssrc += srowbytes;
-		ddst += drowbytes * 2;
-	}
+    ddst += drowbytes * 2;
+  }
 }
 /* Average filter (SdlEmu) */

@@ -758,7 +758,8 @@ void gui_ShowFPS()
 void gui_video_early_init()
 {
 	SDL_Init(SDL_INIT_AUDIO|SDL_INIT_VIDEO);
-	handy_sdl_video_early_setup(480, 272, 16, SDL_HWSURFACE | SDL_DOUBLEBUF);
+	// handy_sdl_video_early_setup(480, 272, 16, SDL_HWSURFACE | SDL_DOUBLEBUF);
+	handy_sdl_video_early_setup(320, 240, 16, SDL_HWSURFACE | SDL_DOUBLEBUF);
 	menuSurface = SDL_CreateRGBSurface(SDL_SWSURFACE, 320, 240, 16, 0, 0, 0, 0);
 	SDL_ShowCursor(0);
 	SDL_EnableKeyRepeat(/*SDL_DEFAULT_REPEAT_DELAY*/ 150, /*SDL_DEFAULT_REPEAT_INTERVAL*/30);
@@ -780,17 +781,17 @@ void gui_Flip()
 
 	dstrect.x = (mainSurface->w - 320) / 2;
 	dstrect.y = (mainSurface->h - 240) / 2;
-	//SDL_BlitSurface(menuSurface, 0, mainSurface, &dstrect);
+	SDL_BlitSurface(menuSurface, 0, mainSurface, &dstrect);
 
-  int x, y;
-  uint32_t *s = (uint32_t*)menuSurface->pixels;
-  uint32_t *d = (uint32_t*)mainSurface->pixels;
+  // int x, y;
+  // uint32_t *s = (uint32_t*)menuSurface->pixels;
+  // uint32_t *d = (uint32_t*)mainSurface->pixels;
 
-  for(y=0; y<240; y++){
-    for(x=0; x<160; x++){
-      *d++ = *s++;
-    }
-    d+= 160;
-  }
+  // for(y=0; y<240; y++){
+  //   for(x=0; x<160; x++){
+  //     *d++ = *s++;
+  //   }
+  //   d+= 160;
+  // }
 	SDL_Flip(mainSurface);
 }

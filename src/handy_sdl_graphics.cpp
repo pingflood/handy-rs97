@@ -96,7 +96,7 @@ int handy_sdl_video_early_setup(int surfacewidth, int surfaceheight, int sdl_bpp
     }
 
 #endif
-    mainSurface = SDL_SetVideoMode(320, 480, 16, videoflags);
+    mainSurface = SDL_SetVideoMode(320, 240, 16, videoflags);
     if (mainSurface == NULL)
     {
         printf("Could not create primary SDL surface: %s\n", SDL_GetError());
