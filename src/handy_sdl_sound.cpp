@@ -147,11 +147,10 @@ int handy_sdl_audio_init(void)
     desired = (SDL_AudioSpec *)malloc(sizeof(SDL_AudioSpec));
 
     /* Define our desired SDL audio output */
-    /* Try AUDIO_S16SYS and 11025 if you hardware does not support 8-bits sound */
-    desired->format     = AUDIO_S8;                  // Unsigned 8-bit
+    desired->format     = AUDIO_U8;                  // Unsigned 8-bit
     desired->channels   = 2;                         // Pseudo stereo
-    desired->freq       = 22050;   // Freq : 22050 
-    desired->samples    = 1024;                       // Samples (power of two)
+    desired->freq       = HANDY_AUDIO_SAMPLE_FREQ;   // Freq : 22050 
+    desired->samples    = 256;                       // Samples (power of two)
     desired->callback   = handy_sdl_audio_callback;  // Our audio callback
     desired->userdata   = NULL;                      // N/A
 

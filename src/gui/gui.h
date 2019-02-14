@@ -17,3 +17,15 @@ void gui_Run();
 void gui_Init(); 
 
 int gui_LoadFile(char *romname);
+
+void get_config_path();
+void get_home_path();
+
+// #define LYNX_WIDTH 160
+// #define LYNX_HEIGHT 102
+
+#define LYNX_WIDTH 320
+#define LYNX_HEIGHT 240
+
+#define SCREEN_WIDTH 320
+#define SCREEN_HEIGHT 240

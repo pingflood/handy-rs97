@@ -25,15 +25,15 @@
 //                             Copyright (c) 2005                           //
 //                                SDLemu Team                               //
 //                                                                          //
-//                          Based upon Handy v0.95 WIN32                    //
+//                          Based upon Handy v0.90 WIN32                    // 
 //                            Copyright (c) 1996,1997                       //
 //                                  K. Wilkins                              //
 //////////////////////////////////////////////////////////////////////////////
-// handy_sdl_main.h                                                         //
+// handy_sdl_handling.h                                                     //
 //////////////////////////////////////////////////////////////////////////////
 //                                                                          //
-// This is the main Handy/SDL header file. It manages the main functions    //
-// for emulating the Atari Lynx emulator using the SDL Library.             //
+// This is the Handy/SDL handling header file. It manages the handling      //
+// functions for emulating the Atari Lynx emulator using the SDL Library.   //
 //                                                                          //
 //    N. Wagenaar                                                           //
 // December 2005                                                            //
@@ -53,51 +53,16 @@
 //  closed source version.                                                  //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef __HANDY_SDL_MAIN_H__
-#define __HANDY_SDL_MAIN_H__
+#ifndef __HANDY_SDL_HANDLING_H__
+#define __HANDY_SDL_HANDLING_H__
 
-#include "system.h"
-#include "pixblend.h"
-#include "errorhandler.h"
-
-
-#define		HANDY_SDL_VERSION	"v0.5"
-#define     HANDY_VERSION           	"Handy 0.95 WIN32"
-#define     HANDY_BASE_FPS              60
-
-// #ifdef GCWZERO
-extern int everyotherframe;
-extern int originalshow;
-extern int lynxversion;
-// #endif
-
-/* SDL declarations */
-extern SDL_Surface		*HandyBuffer; 			// Our Handy/SDL display buffer
-extern SDL_Surface		*mainSurface;	 		// Our Handy/SDL primary display
-
-/* Handy declarations */
-extern Uint32			*mpLynxBuffer;
-extern CSystem 		    *mpLynx;
-extern int				 mFrameSkip;
-extern int				 mpBpp;
-
-/* Handy/SDL declarations */
-extern int			 	LynxWidth;				// Lynx SDL screen width
-extern int			 	LynxHeight;      		// Lynx SDL screen height
-extern int 		 	    LynxFormat;				// Lynx ROM format type
-extern int 		 	    LynxRotate;				// Lynx ROM rotation type
-extern int				LynxScale;				// Scale output
-extern int				LynxLCD;                // LCD/Scanline Output
-extern int				emulation;              // Emulation enabled
-extern int				rendertype;             // SDL Rendertype
-extern int				stype;					// Scaling/Scanline Routine
-extern int              filter;					// Output Filter
-extern Uint32           overlay_format;         // YUV Overlay format
-extern Uint8  		   *delta;
-
-inline	int 	handy_sdl_update(void);
-		void 	handy_sdl_rom_info(void);
-		int 	main(int argc, char *argv[]);
-		void	handy_sdl_quit(void);
-		void	handy_sdl_core_reinit(char *romname);
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <SDL/SDL.h>
+#include <SDL/SDL_main.h>
+#include <SDL/SDL_timer.h>
+ 
+int		handy_sdl_on_key_up(SDL_KeyboardEvent key, int mask);
+int		handy_sdl_on_key_down(SDL_KeyboardEvent key, int mask);
 #endif

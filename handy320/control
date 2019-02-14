@@ -1,0 +1,10 @@
+Package: handy320
+Version: 
+Description: RetroGame port of Handy320, the Atari Lynx emulator
+Section: emus
+Priority: optional
+Maintainer: pingflood
+Architecture: mipsel
+Homepage: https://github.com/pingflood/handy320
+Depends:
+Source: https://github.com/pingflood/handy320

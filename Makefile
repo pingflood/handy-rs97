@@ -26,10 +26,10 @@ SDL_LIBS := $(shell $(SYSROOT)/usr/bin/sdl-config --libs)
 
 TARGET     = handy320
 
-CFLAGS = -DDINGUX -O2 -mips32 -DWANT_CRC32 -DANSI_GCC -DSDL_PATCH -DDINGOO $(SDL_CFLAGS)
+CFLAGS = -DGCWZERO -DDINGUX -DDINGUX -O2 -mips32 -DWANT_CRC32 -DANSI_GCC -DSDL_PATCH $(SDL_CFLAGS)
 CPPFLAGS = $(CFLAGS)
 LDFLAGS =
-LIBS = -lstdc++ $(SDL_LIBS) -lz -lpthread
+LIBS = -lstdc++ $(SDL_LIBS) -lz -lpthread -lSDL_image -lSDL_ttf
 
 INCS = -I./src -I./src/handy-libretro -I./src/sdlemu
 

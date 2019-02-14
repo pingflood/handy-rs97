@@ -95,7 +95,7 @@ typedef struct {
 	MENUITEM *m; // array of items
 } MENU;
 
-char* gui_ScaleNames[] = {"simple2x", "fullscreen"};
+char* gui_ScaleNames[] = {"original", "fullscreen", "simple2x"};
 char* gui_YesNo[] = {"no", "yes"};
 
 MENUITEM gui_MainMenuItems[] = {
@@ -110,14 +110,14 @@ MENUITEM gui_MainMenuItems[] = {
 MENU gui_MainMenu = { 5, 0, (MENUITEM *)&gui_MainMenuItems };
 
 MENUITEM gui_ConfigMenuItems[] = {
-	{(char *)"Upscale  : ", &gui_ImageScaling, 1, (char **)&gui_ScaleNames, NULL},
+	{(char *)"Upscale  : ", &gui_ImageScaling, 2, (char **)&gui_ScaleNames, NULL},
 	//{(char *)"Frameskip: ", &gui_Frameskip, 9, NULL, NULL},
 	{(char *)"Show fps : ", &gui_Show_FPS, 1, (char **)&gui_YesNo, NULL},
 	{(char *)"Limit fps: ", &Throttle, 1, (char **)&gui_YesNo, NULL},
 	{(char *)"Swap A/B : ", &gui_SwapAB, 1, (char **)&gui_YesNo, NULL}
 };
 
-MENU gui_ConfigMenu = { 4, 0, (MENUITEM *)&gui_ConfigMenuItems };
+MENU gui_ConfigMenu = { 5, 0, (MENUITEM *)&gui_ConfigMenuItems };
 
 /*
 	Clears mainSurface
@@ -690,14 +690,19 @@ void gui_Init()
 
 void gui_Run()
 {
+	// mainSurface=SDL_SetVideoMode(320,240,16,SDL_HWSURFACE|SDL_DOUBLEBUF);
+
+	extern int LynxScale; // remove later, temporal hack
 	extern int filter; // remove later, temporal hack
 	extern int BT_A, BT_B; // remove later, temporal hack
 
 	SDL_EnableKeyRepeat(/*SDL_DEFAULT_REPEAT_DELAY*/ 150, /*SDL_DEFAULT_REPEAT_INTERVAL*/30);
 	gui_ClearScreen();
-	gui_ImageScaling = (filter == 6 ? 0 : 1); // remove later, temporal hack
+	// gui_ImageScaling = (filter == 6 ? 0 : 1); // remove later, temporal hack
 	gui_MainMenuRun(&gui_MainMenu);
-	filter = (gui_ImageScaling == 0 ? 6 : 0); // remove later, temporal hack
+	filter = (gui_ImageScaling == 2 ? 6 : 0); // remove later, temporal hack
+	LynxScale = (gui_ImageScaling == 1 ? 1 : 0);
+
 	if(gui_SwapAB == 0) {
     BT_A = SDLK_LCTRL;
     BT_B = SDLK_LALT;

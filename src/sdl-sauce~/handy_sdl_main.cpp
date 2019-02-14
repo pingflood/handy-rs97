@@ -74,16 +74,12 @@
 #include "gui/gui.h"
 #endif
 
+#include <sys/stat.h>
+#include <sys/types.h>
+
 /* SDL declarations */
 SDL_Surface        *HandyBuffer;             // Our Handy/SDL display buffer
 SDL_Surface        *mainSurface;             // Our Handy/SDL primary display
-// #ifdef GCWZERO
-int redrawbackground;
-int originalshow = 1;
-int lynxversion = 1;
-int everyotherframe;
-static int gcw_no_bios;
-// #endif
 
 /* Handy declarations */
 Uint32            *mpLynxBuffer;
@@ -138,7 +134,7 @@ int                stype = 1;                // Scaling/Scanline routine.
     Default = 1 (SDLEmu v1)
 */
 
-int                filter = 0;                // Scaling/Scanline routine.
+int                filter = 6;                // Scaling/Scanline routine.
 
 
 /*
@@ -152,8 +148,6 @@ int                filter = 0;                // Scaling/Scanline routine.
                             Handy WIN32 with minor tweaks for SDL. It is used for
                             basic throttle of the Handy core.
 */
-
-
 inline    int handy_sdl_update(void)
 {
 
@@ -293,37 +287,6 @@ void handy_sdl_quit(void)
     SDL_PauseAudio(1);
     emulation   = -1;
 
-#ifdef GCWZERO //saveconfiguration
-  	FILE* gcwconfig;
-	gcwconfig = fopen("/home/retrofw/.handy/.cfg", "r+");
-	if (!gcwconfig) {
-		gcwconfig = fopen("/home/retrofw/.handy/.cfg", "w");
-		printf("Saving new configuration");
-		fprintf(gcwconfig, "%d%d", originalshow, lynxversion);
-	} else {
-		int gcwcfg[3];
-		int gcwcfg2[3];
-		gcwcfg[0]=originalshow;
-		gcwcfg[1]=lynxversion;
-		// gcwcfg[2]=scanlinesrequested;
-		int i;
-		for(i=0;i<3;i++) {
-			fscanf(gcwconfig, "%1d", &gcwcfg2[i]);
-		}
-//		printf("gcwcfg=%d %d %d, gcwcfg2=%d %d %d", gcwcfg[0], gcwcfg[1], gcwcfg[2], gcwcfg2[0], gcwcfg2[1], gcwcfg2[2]);
-
-		if( (gcwcfg[0] != gcwcfg2[0]) || (gcwcfg[1] != gcwcfg2[1]) || (gcwcfg[2] != gcwcfg2[2]) ) {
-			printf("Saving new configuration");
-			rewind(gcwconfig);
-			fprintf(gcwconfig, "%d%d", originalshow, lynxversion);
-		}
-		else
-			printf("No configuration changes made");
-	}
-	fclose(gcwconfig);
-#endif
-
-
 #ifndef DINGUX
     //Remove YUV Overlay
     if ( rendertype == 3 )
@@ -331,12 +294,12 @@ void handy_sdl_quit(void)
 #endif
 
     //Let is give some free memory
-//    free(mpLynxBuffer);
     free(mpLynxBuffer);
 
     // Destroy SDL Surface's
-    SDL_FreeSurface(mainSurface);
-    SDL_FreeSurface(HandyBuffer);//crashes is swapped around on GCW0
+    // Causes Illegal Instruction on Zipit Z2
+    //SDL_FreeSurface(HandyBuffer);
+    //SDL_FreeSurface(mainSurface);
 
     // Close SDL Subsystems
     SDL_QuitSubSystem(SDL_INIT_VIDEO|SDL_INIT_AUDIO);
@@ -345,7 +308,6 @@ void handy_sdl_quit(void)
 
 }
 
-char bios_path_and_name[512]; // full path of lynxboot.img
 char rom_name_with_no_ext[128]; // rom name with no extension, used for savestates
 
 void handy_sdl_core_init(char *romname)
@@ -365,24 +327,7 @@ void handy_sdl_core_init(char *romname)
     //printf("Naked name: %s\n", (char *)&rom_name_with_no_ext);
 
     printf("Initialising Handy Core...    ");
-    try {
-        mpLynx = new CSystem(romname);
-        // mpLynx = new CSystem(romname, bios_path_and_name);
-    } catch (CLynxException &err) {
-#ifdef GCWZERO //catch error and display warning message instead
-        gcw_no_bios=1;
-#else
-        cerr << err.mMsg.str() << ": " << err.mDesc.str() << endl;
-        exit(EXIT_FAILURE);
-#endif
-    }
-#ifdef GCWZERO
-    if (gcw_no_bios)
-    {
-        printf("[BIOS NOT FOUND!]\n\n");
-        return;
-    }
-#endif
+	mpLynx = new CSystem(romname);
     printf("[DONE]\n\n");
 
     // DEBUG
@@ -429,25 +374,15 @@ int main(int argc, char *argv[])
     int       overlay = 1;     // YUV Overlay format
     char      overlaytype[4];  // Overlay Format
 #endif
-    static char load_filename[512];
-    char    *romname = NULL;
+    char load_filename[512];
+    char romname[512];
+    
+    printf("STARTY EMULATOR\n");
 
     // get bios path
     getcwd(load_filename, 512);
-    sprintf(bios_path_and_name, "%s/%s", load_filename, "lynxboot.img");
 
-#ifdef DINGUX
-    { // check if lynxboot.img exists and switch to HOME if needed
-        extern char config_full_path[512];
-        FILE *fd = fopen(bios_path_and_name, "rb");
-        if(!fd) {
-            get_config_path();
-            sprintf(bios_path_and_name, "%s/%s", config_full_path, "lynxboot.img");
-        } else fclose(fd);
-    }
-#endif
-
-    gAudioEnabled = TRUE;
+    gAudioEnabled = FALSE; // Disable audio by default for Zipit
 
     // Default output
     printf("Handy GCC/SDL Portable Atari Lynx Emulator %s\n", HANDY_SDL_VERSION);
@@ -460,7 +395,7 @@ int main(int argc, char *argv[])
     if (argc < 2) {
 #ifdef DINGUX
         if(gui_LoadFile(load_filename))  {
-            romname = (char *)&load_filename;
+            snprintf(romname, sizeof(romname), "%s", load_filename);
         } else {
             handy_sdl_usage();
             exit(EXIT_FAILURE);
@@ -470,6 +405,10 @@ int main(int argc, char *argv[])
         exit(EXIT_FAILURE);
 #endif
     }
+    else
+    {
+		snprintf(romname, sizeof(romname), "%s", argv[1]);
+	}
 
     for ( i=0; (i < argc || argv[i] != NULL ); i++ )
     {
@@ -585,26 +524,7 @@ int main(int argc, char *argv[])
         }
 #endif
     }
-#ifdef GCWZERO 
-	//load current config
-	FILE* gcwconfigfile = fopen("/home/retrofw/.handy/.cfg", "r");
-    if (gcwconfigfile)
-	{
-		int gcwconfigurationsettings[3];
-		int i;
-		for(i=0;i<3;i++) {
-			fscanf(gcwconfigfile, "%1d", &gcwconfigurationsettings[i]);
-		}
-		printf("\nConfig file loaded, contents = %d %d %d\n", gcwconfigurationsettings[0], gcwconfigurationsettings[1],gcwconfigurationsettings[2]);
-
-		originalshow       = gcwconfigurationsettings[0];
-		lynxversion        = gcwconfigurationsettings[1];
-		// scanlinesrequested = gcwconfigurationsettings[2];
-		redrawbackground   = 5;
-
-	fclose(gcwconfigfile);
-	}
-#endif
+    gAudioEnabled = TRUE;
 
     // Initalising SDL for Audio and Video support
     printf("Initialising SDL...           ");
@@ -615,7 +535,7 @@ int main(int argc, char *argv[])
     printf("[DONE]\n");
 
     // Primary initalise of Handy - should be called AFTER SDL_Init() but BEFORE handy_sdl_video_setup()
-    handy_sdl_core_init(romname ? romname : argv[1]);
+    handy_sdl_core_init(romname);
 
     // Initialise Handy/SDL video 
 #ifndef DINGUX
@@ -626,10 +546,7 @@ int main(int argc, char *argv[])
     {
         return 0;
     }
-#ifdef GCWZERO
-    if(gcw_no_bios)
-        gcw_display_bios_warning();
-#endif
+
     // Initialise Handy/SDL audio
     printf("\nInitialising SDL Audio...     ");
     if(handy_sdl_audio_init())
@@ -637,6 +554,7 @@ int main(int argc, char *argv[])
         gAudioEnabled = TRUE;
     }
     printf("[DONE]\n");
+
 
     // Setup of Handy Core video
     handy_sdl_video_init(mpBpp);
@@ -666,40 +584,17 @@ int main(int argc, char *argv[])
                 case SDL_KEYDOWN:
                     #ifdef DINGUX
                     if(handy_sdl_event.key.keysym.sym == SDLK_BACKSPACE) {
-		    #ifdef GCWZERO //Use the HW scaling functions instead
-			redrawbackground=5;
-			if(!originalshow || (originalshow == 1) ) {
-				originalshow++;
-				if (originalshow == 1) lynxversion = 1;
-				else lynxversion = 2;
-				mainSurface=SDL_SetVideoMode(320,240,16,SDL_HWSURFACE|SDL_DOUBLEBUF);
-			} else {
-				originalshow=0;
-				mainSurface=SDL_SetVideoMode(160,102,16,SDL_HWSURFACE|SDL_DOUBLEBUF);
-			}
-
-		    #else
                         //filter = (filter + 1) % 11;
                         if(filter != 6) filter = 6; else filter = 0;
-		    #endif
                         SDL_FillRect(mainSurface,NULL,SDL_MapRGBA(mainSurface->format, 0, 0, 0, 255));
                         SDL_Flip(mainSurface);
                         SDL_FillRect(mainSurface,NULL,SDL_MapRGBA(mainSurface->format, 0, 0, 0, 255));
                         SDL_Flip(mainSurface);
                         break;
                     }
-#ifdef GCWZERO
-                    if(handy_sdl_event.key.keysym.sym == SDLK_END || handy_sdl_event.key.keysym.sym == SDLK_ESCAPE ) {
-        			redrawbackground=5;
-                    mainSurface = SDL_SetVideoMode(SCREEN_WIDTH,SCREEN_HEIGHT,16,SDL_HWSURFACE|SDL_DOUBLEBUF);
+                    //if(handy_sdl_event.key.keysym.sym == SDLK_TAB) {
+                    if(handy_sdl_event.key.keysym.sym == SDLK_END || handy_sdl_event.key.keysym.sym == SDLK_ESCAPE) { // fix for retrogame
                         gui_Run();
-
-        			if (!originalshow) mainSurface = SDL_SetVideoMode(LYNX_WIDTH,LYNX_HEIGHT,16,SDL_HWSURFACE|SDL_DOUBLEBUF);
-#else
-                    if(handy_sdl_event.key.keysym.sym == SDLK_TAB) {
-                        gui_Run();
-
-#endif
                         KeyMask = 0;
                         break;
                     }
@@ -719,6 +614,8 @@ int main(int argc, char *argv[])
         // Update TimerCount
         gTimerCount++;
 
+		Uint32 start;
+
         while( handy_sdl_update() )
         {
             if(!gSystemHalt)
@@ -734,7 +631,7 @@ int main(int argc, char *argv[])
                     mpLynx->Update();
                 }
                 SDL_CondSignal(sound_cv);
-                SDL_UnlockMutex(sound_mutex);
+SDL_UnlockMutex(sound_mutex);
             }
             else
             {
@@ -755,14 +652,11 @@ int main(int argc, char *argv[])
 
         fps_counter = (((float)gTimerCount/(handy_sdl_this_time-handy_sdl_start_time))*1000.0);
 #ifdef HANDY_SDL_DEBUG
+        printf("fps_counter : %f\n", fps_counter);
 #endif
 
         // not needed since we are synchronizing by sound
         //if( (Throttle) && (fps_counter > 59.99) ) SDL_Delay( (Uint32)fps_counter );
-#ifdef GCWZERO
-        if(fps_counter < 60) everyotherframe=1; //skip even frames until we catch up.
-	else everyotherframe=0;
-#endif
 
 #ifndef DINGUX
         if(Autoskip)
