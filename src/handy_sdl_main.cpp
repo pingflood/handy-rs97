@@ -593,7 +593,7 @@ int main(int argc, char *argv[])
                         break;
                     }
                     //if(handy_sdl_event.key.keysym.sym == SDLK_TAB) {
-                    if(handy_sdl_event.key.keysym.sym == 51) { // fix for retrogame
+                    if(handy_sdl_event.key.keysym.sym == SDLK_END || handy_sdl_event.key.keysym.sym == SDLK_ESCAPE) { // fix for retrogame
                         gui_Run();
                         KeyMask = 0;
                         break;
