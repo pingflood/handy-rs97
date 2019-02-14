@@ -1,3 +1,5 @@
 *.o
 *.elf
 *.dge
+*.ipk
+*.opk
