@@ -68,23 +68,34 @@
 
 // map keys differently for dingux
 #ifdef DINGUX
-int BT_A = SDLK_LCTRL;
-int BT_B = SDLK_LALT;
+    // #define BT_A        SDLK_LCTRL       // A
+    // #define BT_B        SDLK_LALT        // B
+    // #define BT_OPT1     SDLK_LSHIFT      // Y
+    // #define BT_OPT2     SDLK_SPACE       // X
+
+    #define GCW0_A        SDLK_LCTRL       // A
+    #define GCW0_B        SDLK_LALT        // B
+    #define GCW0_Y        SDLK_LSHIFT      // Y
+    #define GCW0_X        SDLK_SPACE       // X
 
     #define BT_LEFT     SDLK_LEFT
     #define BT_RIGHT    SDLK_RIGHT
     #define BT_UP       SDLK_UP
     #define BT_DOWN     SDLK_DOWN
     #define BT_PAUSE    SDLK_RETURN      // START
-    //#define BT_A        SDLK_LCTRL       // A
-    //#define BT_B        SDLK_LALT        // B
-    #define BT_OPT1     SDLK_LSHIFT      // Y
-    #define BT_OPT2     SDLK_SPACE       // X
-#ifdef GCWZERO
-    #define BT_OFF      SDLK_RCTRL      // quit from menu to prevent accidental triggering. SELECT=menu (see sdl_handy_main.cpp)
-#else
-    #define BT_OFF      SDLK_ESCAPE      // SELECT
-#endif
+
+    // #define BT_A        SDLK_LCTRL       // A
+    // #define BT_B        SDLK_LALT        // B
+    #define BT_OPT1     GCW0_A
+    #define BT_OPT2     GCW0_X
+    #define BT_A        GCW0_B
+    #define BT_B        GCW0_Y
+
+    #ifdef GCWZERO
+        #define BT_OFF      SDLK_RCTRL      // quit from menu to prevent accidental triggering. SELECT=menu (see sdl_handy_main.cpp)
+    #else
+        #define BT_OFF      SDLK_ESCAPE      // SELECT
+    #endif
 #else
     #define BT_LEFT     SDLK_LEFT
     #define BT_RIGHT    SDLK_RIGHT
@@ -109,8 +120,18 @@ int  handy_sdl_on_key_down(SDL_KeyboardEvent key, int mask)
     }
 */  
 
+if (gui_SwapAB){
+
+    if(key.keysym.sym == BT_B) return mask |= BUTTON_A;
+    if(key.keysym.sym == BT_A) return mask |= BUTTON_B;
+}
+else 
+{
+
     if(key.keysym.sym == BT_B) return mask |= BUTTON_B;
     if(key.keysym.sym == BT_A) return mask |= BUTTON_A;
+}
+
 
     switch(key.keysym.sym) {
         case BT_LEFT: {  // Lynx LEFT

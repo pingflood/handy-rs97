@@ -117,7 +117,7 @@ MENUITEM gui_ConfigMenuItems[] = {
 	{(char *)"Swap A/B : ", &gui_SwapAB, 1, (char **)&gui_YesNo, NULL}
 };
 
-MENU gui_ConfigMenu = { 5, 0, (MENUITEM *)&gui_ConfigMenuItems };
+MENU gui_ConfigMenu = { 4, 0, (MENUITEM *)&gui_ConfigMenuItems };
 
 /*
 	Clears mainSurface
@@ -694,7 +694,7 @@ void gui_Run()
 
 	extern int LynxScale; // remove later, temporal hack
 	extern int filter; // remove later, temporal hack
-	extern int BT_A, BT_B; // remove later, temporal hack
+	// extern int BT_A, BT_B; // remove later, temporal hack
 
 	SDL_EnableKeyRepeat(/*SDL_DEFAULT_REPEAT_DELAY*/ 150, /*SDL_DEFAULT_REPEAT_INTERVAL*/30);
 	gui_ClearScreen();
@@ -703,17 +703,14 @@ void gui_Run()
 	filter = (gui_ImageScaling == 2 ? 6 : 0); // remove later, temporal hack
 	LynxScale = (gui_ImageScaling == 1 ? 1 : 0);
 
-	if(gui_SwapAB == 0) {
-    BT_A = SDLK_LCTRL;
-    BT_B = SDLK_LALT;
-		//BT_A = SDLK_p;
-		//BT_B = SDLK_o;
-	} else {
-    BT_A = SDLK_LALT;
-    BT_B = SDLK_LCTRL;
-		//BT_A = SDLK_o;
-		//BT_B = SDLK_p;
-	}
+	// if(gui_SwapAB == 0) {
+	//     BT_A = BUTTON_B;
+	//     BT_B = BUTTON_Y;
+	// } else {
+	//     BT_A = BUTTON_Y;
+	//     BT_B = BUTTON_B;
+	// }
+
 	gui_ClearScreen();
 	SDL_EnableKeyRepeat(0, 0);
 }

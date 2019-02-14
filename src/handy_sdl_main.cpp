@@ -94,7 +94,7 @@ int                 mpBpp;                    // Lynx rendering bpp
 /* Handy/SDL declarations */
 int                 LynxWidth;                // Lynx SDL screen width
 int                 LynxHeight;              // Lynx SDL screen height
-int                LynxScale = 1;            // Factor to scale the display
+int                LynxScale = 0;            // Factor to scale the display
 int                LynxLCD = 1;            // Emulate LCD Display
 int              LynxFormat;                // Lynx ROM format type
 int              LynxRotate;                // Lynx ROM rotation type
