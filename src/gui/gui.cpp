@@ -42,10 +42,11 @@
 
 #define COLOR_BG            0x0861 //color16(00, 00, 00)
 #define COLOR_ROM_INFO      color16(22, 36, 26)
-#define COLOR_ACTIVE_ITEM   0xF480 // color16(63, 40, 00)
+#define COLOR_ACTIVE_ITEM   0xFCA0 // color16(63, 40, 00)
 #define COLOR_INACTIVE_ITEM 0xEF5C //color16(57, 57, 57)
 #define COLOR_FRAMESKIP_BAR color16(15, 31, 31)
-#define COLOR_HELP_TEXT     0xEF5C //color16(31, 31, 00)
+#define COLOR_HELP_TEXT     0x94B2 //color16(31, 31, 00)
+#define COLOR_TITLE_TEXT    0xFCA0 //color16(31, 31, 00)
 
 /* external references */
 extern int Throttle; // show fps, from handy_sdl_main.cpp
@@ -595,8 +596,8 @@ void ShowMenu(MENU *menu)
 
 	// print info string
 	// print_string("Press B to return to game", COLOR_HELP_TEXT, COLOR_BG, 56, 220);
-	print_string("Handy320 v0.1 for OpenDingux", COLOR_HELP_TEXT, COLOR_BG, 44, 2);
-	print_string("Handy/SDL 0.5 (c) K. Wilkins and SDLemu", COLOR_HELP_TEXT, COLOR_BG, 4, 220);
+	print_string("Handy320 v0.1", COLOR_TITLE_TEXT, COLOR_BG, 108, 2);
+	print_string("Handy/SDL 0.5 (c) K. Wilkins and SDLemu", COLOR_HELP_TEXT, COLOR_BG, 4, 230);
 }
 
 /*
