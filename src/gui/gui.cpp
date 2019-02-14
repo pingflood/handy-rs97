@@ -546,7 +546,7 @@ void ShowPreview(MENU *menu)
 	char prename[256];
 	static char prebuffer[160 * 102 * 2];
 
-	if(menu == &gui_MainMenu && (menu->itemCur == 2 || menu->itemCur == 3)) {
+	if(menu == &gui_MainMenu && (menu->itemCur == 0 || menu->itemCur == 1)) {
 		if(loadslot != gui_LoadSlot) {
 			// create preview name
 			sprintf(prename, "%s/%s.%i.img", config_full_path, rom_name_with_no_ext, gui_LoadSlot);
@@ -559,15 +559,16 @@ void ShowPreview(MENU *menu)
 			loadslot = gui_LoadSlot; // do not load img file each time
 		}
 		// show preview
-		for(int y = 0; y < 102; y++) memcpy((char *)menuSurface->pixels + (24 + y) * 320*2 + 80*2, prebuffer + y * 320, 320);
-	} else {
-		if(HandyBuffer != NULL) {
-			SDL_Rect dst;
-			dst.x = 80;
-			dst.y = 24;
-			SDL_BlitSurface(HandyBuffer, 0, menuSurface, &dst);
-		}
-	}
+		for(int y = 0; y < 102; y++) memcpy((char *)menuSurface->pixels + (50 + y) * 320*2 + 150*2, prebuffer + y * 320, 320);
+	} 
+	// else {
+	// 	if(HandyBuffer != NULL) {
+	// 		SDL_Rect dst;
+	// 		dst.x = 150;
+	// 		dst.y = 50;
+	// 		SDL_BlitSurface(HandyBuffer, 0, menuSurface, &dst);
+	// 	}
+	// }
 }
 
 /*
@@ -586,7 +587,7 @@ void ShowMenu(MENU *menu)
 		int fg_color;
 
 		if(menu->itemCur == i) fg_color = COLOR_ACTIVE_ITEM; else fg_color = COLOR_INACTIVE_ITEM;
-		ShowMenuItem(80, (18 + i) * 12, mi, fg_color);
+		ShowMenuItem(20, 60 + i * 12, mi, fg_color);
 	}
 
 	// show preview screen
@@ -595,7 +596,7 @@ void ShowMenu(MENU *menu)
 	// print info string
 	// print_string("Press B to return to game", COLOR_HELP_TEXT, COLOR_BG, 56, 220);
 	print_string("Handy320 v0.1 for OpenDingux", COLOR_HELP_TEXT, COLOR_BG, 44, 2);
-	print_string("Handy/SDL 0.5 (c) K. Wilkins and SDLemu", COLOR_HELP_TEXT, COLOR_BG, 4, 12);
+	print_string("Handy/SDL 0.5 (c) K. Wilkins and SDLemu", COLOR_HELP_TEXT, COLOR_BG, 4, 220);
 }
 
 /*
