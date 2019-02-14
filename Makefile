@@ -97,7 +97,7 @@ handy320/$(TARGET)$(EXESUFFIX): $(OBJS)
 	$(LD) $(LDFLAGS) -o $@ $(OBJS) $(LIBS)
 	$(STRIP) --strip-all handy320/$(TARGET)$(EXESUFFIX)
 
-ipk: handy320/$(TARGET)$(EXESUFFIX)
+ipk: all
 	@rm -rf /tmp/.handy320-ipk/ && mkdir -p /tmp/.handy320-ipk/root/home/retrofw/emus/handy320 /tmp/.handy320-ipk/root/home/retrofw/apps/gmenu2x/sections/emulators /tmp/.handy320-ipk/root/home/retrofw/apps/gmenu2x/sections/systems
 	@cp handy320/handy320.dge handy320/background_lynx.png handy320/background_lynx2.png handy320/conffiles handy320/control handy320/handy320.lnk handy320/handy320.png handy320/lynx.handy320.lnk handy320/ProggyTiny.ttf /tmp/.handy320-ipk/root/home/retrofw/emus/handy320
 	@cp handy320/handy320.lnk /tmp/.handy320-ipk/root/home/retrofw/apps/gmenu2x/sections/emulators
