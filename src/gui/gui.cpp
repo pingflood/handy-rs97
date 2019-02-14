@@ -99,15 +99,15 @@ char* gui_ScaleNames[] = {"simple2x", "fullscreen"};
 char* gui_YesNo[] = {"no", "yes"};
 
 MENUITEM gui_MainMenuItems[] = {
-	{(char *)"Load rom", NULL, NULL, NULL, &gui_FileBrowserRun},
-	{(char *)"Config", NULL, NULL, NULL, &gui_ConfigMenuRun},
+	// {(char *)"Load rom", NULL, NULL, NULL, &gui_FileBrowserRun},
 	{(char *)"Load state: ", &gui_LoadSlot, 9, NULL, &gui_LoadState},
 	{(char *)"Save state: ", &gui_LoadSlot, 9, NULL, &gui_SaveState},
+	{(char *)"Settings", NULL, NULL, NULL, &gui_ConfigMenuRun},
 	{(char *)"Reset", NULL, NULL, NULL, &gui_Reset},
 	{(char *)"Exit", NULL, NULL, NULL, &handy_sdl_quit} // extern in handy_sdl_main.cpp
 };
 
-MENU gui_MainMenu = { 6, 0, (MENUITEM *)&gui_MainMenuItems };
+MENU gui_MainMenu = { 5, 0, (MENUITEM *)&gui_MainMenuItems };
 
 MENUITEM gui_ConfigMenuItems[] = {
 	{(char *)"Upscale  : ", &gui_ImageScaling, 1, (char **)&gui_ScaleNames, NULL},
