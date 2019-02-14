@@ -10,39 +10,32 @@
 # Figure out which system we're compiling for, and set the appropriate variables
 
 OSTYPE=dingux
-EXESUFFIX  = .dge
+EXESUFFIX  = .elf
 
-CHAINPREFIX := /opt/mipsel-linux-uclibc
-CROSS_COMPILE := $(CHAINPREFIX)/usr/bin/mipsel-linux-
+CC         = gcc
+LD         = gcc
+STRIP      = strip
 
-CC  := $(CROSS_COMPILE)gcc
-CXX := $(CROSS_COMPILE)g++
-STRIP := $(CROSS_COMPILE)strip
-LD  := $(CROSS_COMPILE)gcc
-
-SYSROOT := $(shell $(CC) --print-sysroot)
-SDL_CFLAGS := $(shell $(SYSROOT)/usr/bin/sdl-config --cflags)
-SDL_LIBS := $(shell $(SYSROOT)/usr/bin/sdl-config --libs)
 
 TARGET     = handy320
 
-CFLAGS = -DDINGUX -O2 -mips32 -DWANT_CRC32 -DANSI_GCC -DSDL_PATCH -DDINGOO $(SDL_CFLAGS)
+CFLAGS = -DDINGUX -O2 -DWANT_CRC32 -DANSI_GCC -DSDL_PATCH
 CPPFLAGS = $(CFLAGS)
 LDFLAGS =
-LIBS = -lstdc++ $(SDL_LIBS) -lz -lpthread
+LIBS = -lstdc++ -lSDL -lz -lpthread
 
 INCS = -I./src -I./src/handy-libretro -I./src/sdlemu
 
 OBJS = \
 		obj/cart.o \
 		obj/memmap.o \
+		obj/eeprom.o \
+		obj/lynxdec.o \
 		obj/mikie.o \
 		obj/ram.o \
 		obj/rom.o \
 		obj/susie.o \
 		obj/system.o \
-		obj/eeprom.o \
-		obj/lynxdec.o \
 		obj/sdlemu_filter.o \
 		obj/handy_sdl_main.o \
 		obj/handy_sdl_handling.o \
@@ -50,7 +43,7 @@ OBJS = \
 		obj/handy_sdl_sound.o \
 		obj/gui.o \
 		obj/font.o
-		# obj/unzip.o \
+#		obj/unzip.o \
 
 all: obj $(TARGET)$(EXESUFFIX)
 	@echo "*** Looks like it compiled OK... Give it a whirl!"
