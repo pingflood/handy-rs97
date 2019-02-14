@@ -40,12 +40,12 @@
 
 #define color16(red, green, blue) ((red << 11) | (green << 5) | blue)
 
-#define COLOR_BG            color16(05, 03, 02)
+#define COLOR_BG            0x0861 //color16(00, 00, 00)
 #define COLOR_ROM_INFO      color16(22, 36, 26)
-#define COLOR_ACTIVE_ITEM   color16(31, 63, 31)
-#define COLOR_INACTIVE_ITEM color16(13, 40, 18)
+#define COLOR_ACTIVE_ITEM   0xF480 // color16(63, 40, 00)
+#define COLOR_INACTIVE_ITEM 0xEF5C //color16(57, 57, 57)
 #define COLOR_FRAMESKIP_BAR color16(15, 31, 31)
-#define COLOR_HELP_TEXT     color16(16, 40, 24)
+#define COLOR_HELP_TEXT     0xEF5C //color16(31, 31, 00)
 
 /* external references */
 extern int Throttle; // show fps, from handy_sdl_main.cpp
