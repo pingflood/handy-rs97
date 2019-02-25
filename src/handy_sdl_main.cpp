@@ -706,7 +706,7 @@ int main(int argc, char *argv[])
 
                     Uint32             videoflags;
 
-                    mainSurface = SDL_SetVideoMode(SCREEN_WIDTH,SCREEN_HEIGHT,16,SDL_HWSURFACE|
+                    mainSurface = SDL_SetVideoMode(GCW0_WIDTH,GCW0_HEIGHT,16,SDL_HWSURFACE|
                         #ifdef SDL_TRIPLEBUF
                             SDL_TRIPLEBUF
                         #else

@@ -98,10 +98,10 @@ handy320/$(TARGET)$(EXESUFFIX): $(OBJS)
 	$(STRIP) --strip-all handy320/$(TARGET)$(EXESUFFIX)
 
 ipk: all
-	@rm -rf /tmp/.handy320-ipk/ && mkdir -p /tmp/.handy320-ipk/root/home/retrofw/emus/handy320 /tmp/.handy320-ipk/root/home/retrofw/apps/gmenu2x/sections/emulators /tmp/.handy320-ipk/root/home/retrofw/apps/gmenu2x/sections/systems
+	@rm -rf /tmp/.handy320-ipk/ && mkdir -p /tmp/.handy320-ipk/root/home/retrofw/emus/handy320 /tmp/.handy320-ipk/root/home/retrofw/apps/gmenu2x/sections/emulators /tmp/.handy320-ipk/root/home/retrofw/apps/gmenu2x/sections/emulators.systems
 	@cp handy320/handy320.dge handy320/background_lynx.png handy320/background_lynx2.png handy320/conffiles handy320/control handy320/handy320.lnk handy320/handy320.png handy320/lynx.handy320.lnk handy320/ProggyTiny.ttf /tmp/.handy320-ipk/root/home/retrofw/emus/handy320
 	@cp handy320/handy320.lnk /tmp/.handy320-ipk/root/home/retrofw/apps/gmenu2x/sections/emulators
-	@cp handy320/lynx.handy320.lnk /tmp/.handy320-ipk/root/home/retrofw/apps/gmenu2x/sections/systems
+	@cp handy320/lynx.handy320.lnk /tmp/.handy320-ipk/root/home/retrofw/apps/gmenu2x/sections/emulators.systems
 	@sed "s/^Version:.*/Version: $$(date +%Y%m%d)/" handy320/control > /tmp/.handy320-ipk/control
 	@cp handy320/conffiles /tmp/.handy320-ipk/
 	@tar --owner=0 --group=0 -czvf /tmp/.handy320-ipk/control.tar.gz -C /tmp/.handy320-ipk/ control conffiles

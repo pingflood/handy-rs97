@@ -659,6 +659,7 @@ void UpscaleBresenham(Uint16 *src,
 }
 #else
 
+#define AVERAGE(z, x) ((((z) & 0xF7DEF7DE) >> 1) + (((x) & 0xF7DEF7DE) >> 1))
 /*
     Upscale 160x102 -> 320x240
     Horizontal upscale:
@@ -689,12 +690,10 @@ void upscale_320x240(Uint32 *src, Uint32 *dst)
             ab = src[source] & 0xF7DEF7DE;
             cd = src[source + 1] & 0xF7DEF7DE;
 
-            #define AVERAGE(z, x) ((((z) & 0xF7DEF7DE) >> 1) + (((x) & 0xF7DEF7DE) >> 1))
             if(Eh >= midh) { // average + 160
                 ab = AVERAGE(ab, src[source+160/2]);
                 cd = AVERAGE(cd, src[source+160/2+1]);
             }
-            #undef AVERAGE
 
             a = (ab & 0xFFFF) | (ab << 16);
             b = (ab & 0xFFFF0000) | (ab >> 16);
@@ -743,12 +742,10 @@ void upscale_400x240(Uint32 *src, Uint32 *dst)
             ab = src[source] & 0xF7DEF7DE;
             cd = src[source + 1] & 0xF7DEF7DE;
 
-            #define AVERAGE(z, x) ((((z) & 0xF7DEF7DE) >> 1) + (((x) & 0xF7DEF7DE) >> 1))
             if(Eh >= midh) { // average + 160
                 ab = AVERAGE(ab, src[source+160/2]) & 0xF7DEF7DE; // to prevent overflow
                 cd = AVERAGE(cd, src[source+160/2+1]) & 0xF7DEF7DE; // to prevent overflow
             }
-            #undef AVERAGE
 
             a = (ab & 0xFFFF) | (ab << 16);
             b = (((ab & 0xFFFF) >> 1) + ((ab & 0xFFFF0000) >> 17)) | (ab & 0xFFFF0000);
@@ -799,12 +796,10 @@ void upscale_480x272(Uint32 *src, Uint32 *dst)
             ab = src[source] & 0xF7DEF7DE;
             cd = src[source + 1] & 0xF7DEF7DE;
 
-            #define AVERAGE(z, x) ((((z) & 0xF7DEF7DE) >> 1) + (((x) & 0xF7DEF7DE) >> 1))
             if(Eh >= midh) { // average + 160
                 ab = AVERAGE(ab, src[source+160/2]);
                 cd = AVERAGE(cd, src[source+160/2+1]);
             }
-            #undef AVERAGE
 
             a = (ab & 0xFFFF) | (ab << 16);
             b = ab;
@@ -903,12 +898,90 @@ inline void handy_sdl_draw_graphics(void)
          }
 
      } 
-     SDL_Rect centrerect;
-     centrerect.x = 320/4;
-     centrerect.y = 240/4 + 9;
-     centrerect.w = 160;
-     centrerect.h = 102;
-     SDL_BlitSurface(HandyBuffer, NULL, mainSurface, &centrerect);
+     // SDL_Rect centrerect;
+     // centrerect.x = 320/4;
+     // centrerect.y = 240/4 + 9;
+     // centrerect.w = 160;
+     // centrerect.h = 102;
+     // SDL_BlitSurface(HandyBuffer, NULL, mainSurface, &centrerect);
+
+
+
+            // char *scp=(char *) HandyBuffer->pixels;
+            // char *dcp=(char *) mainSurface->pixels;
+            // for (int y=0; y< LynxHeight; y++)
+            // {
+            //     for (int x=0; x<LynxWidth; x++)
+            //     {
+            //         *dcp++=*scp++;
+            //     }
+            // }
+
+
+
+        // switch(mpLynx->CartGetRotate()) {
+        //     case MIKIE_ROTATE_L:
+        //     case MIKIE_ROTATE_R:
+        //         LynxWidth  = 102;
+        //         LynxHeight = 160;
+        //     default:
+        //         LynxWidth  = 160;
+        //         LynxHeight = 102;
+        //     }
+
+                LynxWidth  = 102;
+                LynxHeight = 160;
+
+
+           uint16_t *d = (uint16_t*)mainSurface->pixels + (mainSurface->w - LynxWidth) / 2 + (mainSurface->h - LynxHeight) * mainSurface->pitch / 4 ;
+            uint16_t *s = (uint16_t*)HandyBuffer->pixels;
+            for (int y = 0; y < LynxHeight; y++)
+            {
+                for (int x=0; x<LynxWidth; x++)
+                {
+                    *d++ = s[x * LynxWidth + y];
+                }
+                d += mainSurface->w - LynxWidth;
+            }
+
+
+
+
+
+
+           // uint16_t *d = (uint16_t*)mainSurface->pixels + (mainSurface->w - HandyBuffer->w) / 2 + (mainSurface->h - HandyBuffer->h) * mainSurface->pitch / 4 ;
+           //  uint16_t *s = (uint16_t*)HandyBuffer->pixels;
+           //  for (int y = 0; y < HandyBuffer->h; y++)
+           //  {
+           //      for (int x=0; x<HandyBuffer->w; x++)
+           //      {
+           //          *d++ = *s++;
+           //      }
+
+           //      // s += HandyBuffer->w;
+           //      d += mainSurface->w - HandyBuffer->w;
+           //  }
+
+
+
+
+
+            // uint16_t *d = (uint16_t*)mainSurface->pixels + (mainSurface->w - HandyBuffer->w) / 2 + (mainSurface->h - HandyBuffer->h) * mainSurface->pitch / 4 ;
+            // uint16_t *s = (uint16_t*)HandyBuffer->pixels;
+            // for (int y = 0; y < HandyBuffer->h; y++)
+            // {
+            //     memmove(d, s, HandyBuffer->w * sizeof(uint16_t));
+            //     s += HandyBuffer->w;
+            //     d += mainSurface->w;
+            // }
+
+
+
+
+
+
+
+
      // else {
      //        redrawbackground = 5;
      //        SDL_BlitSurface(HandyBuffer, NULL, mainSurface, NULL);

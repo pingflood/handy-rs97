@@ -27,5 +27,5 @@ void get_home_path();
 #define LYNX_WIDTH 320
 #define LYNX_HEIGHT 240
 
-#define SCREEN_WIDTH 320
-#define SCREEN_HEIGHT 240
+#define GCW0_WIDTH 320
+#define GCW0_HEIGHT 240

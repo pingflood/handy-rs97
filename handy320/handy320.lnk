@@ -2,5 +2,5 @@ title=Handy320
 description=Atari Lynx Emulator
 exec=/home/retrofw/emus/handy320/handy320.dge
 selectordir=/home/retrofw/roms/lynx
-selectorfilter=.lnx
+selectorfilter=.zip,.lnx
 clock=600
